@@ -7,8 +7,8 @@ import {
   Link,
   withRouter
 } from "react-router-dom";
+import { Redirect } from 'react-router'
 
-import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
@@ -85,7 +85,6 @@ class App extends React.Component<{}, State> {
               {user.firstname} {user.lastname} &ndash; {user.accountNr}
             </span>
             {/* Links inside the App are created using the react-router's Link component */}
-            <Link className="nav-item nav-link" to="/">Home</Link>
             <Link className="nav-item nav-link" to="/dashboard">Dashboard</Link>
             <Link className="nav-item nav-link" to="/transactions">Transactions</Link>
             <a className="nav-item nav-link"
@@ -112,17 +111,18 @@ class App extends React.Component<{}, State> {
             exact
             path="/"
             render={props => (
-              <Home {...props} isAuthenticated={isAuthenticated} />
+              <Redirect to="/welcome" />
             )}
           />
           <Route
-            path="/login"
-            render={props => (
-              <Login {...props} authenticate={this.authenticate} />
-            )}
+              exact
+              path="/welcome"
+              render={props => (
+                  <Login {...props} authenticate={this.authenticate} />
+              )}
           />
           <Route path="/signup" component={Signup} />
-          {/* 
+          {/*
             The following are protected routes that are only available for logged-in users. We also pass the user and token so 
             these components can do API calls. PrivateRoute is not part of react-router but our own implementation.
           */}

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Props} from "./Home";
+import {Props} from "./Login";
 
 const Dashboard = ({props}: Props) => (
     <div className="container">

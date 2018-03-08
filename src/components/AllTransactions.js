@@ -1,5 +1,5 @@
 import React from 'react'
-import {Props} from "./Home";
+import {Props} from "./Login";
 
 const AllTransactions = ({props}: Props) => (
     <div>
