@@ -80,15 +80,15 @@ class App extends React.Component<{}, State> {
     const MenuBar = withRouter(({ history, location: { pathname } }) => {
       if (isAuthenticated && user) {
         return (
-          <nav>
+          <nav className="navbar navbar-light bg-light">
             <span>
               {user.firstname} {user.lastname} &ndash; {user.accountNr}
             </span>
             {/* Links inside the App are created using the react-router's Link component */}
-            <Link to="/">Home</Link>
-            <Link to="/dashboard">Kontoübersicht</Link>
-            <Link to="/transactions">Zahlungen</Link>
-            <a
+            <Link className="nav-item nav-link" to="/">Home</Link>
+            <Link className="nav-item nav-link" to="/dashboard">Dashboard</Link>
+            <Link className="nav-item nav-link" to="/transactions">Transactions</Link>
+            <a className="nav-item nav-link"
               href="/logout"
               onClick={event => {
                 event.preventDefault();

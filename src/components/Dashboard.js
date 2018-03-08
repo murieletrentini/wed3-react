@@ -2,8 +2,8 @@ import React from 'react'
 import {Props} from "./Home";
 
 const Dashboard = ({props}: Props) => (
-    <div>
-        <p>Dashboard</p>
+    <div className="container">
+        <h2>Dashboard</h2>
     </div>
 );
 

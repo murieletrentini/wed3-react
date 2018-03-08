@@ -61,7 +61,7 @@ class Signup extends React.Component<{}, *> {
       <div>
         <h1>Bank of Rapperswil</h1>
         <form>
-          <h2>Registrieren</h2>
+          <h2>Sign Up</h2>
           <input
             onChange={this.handleLoginChanged}
             placeholder="Login"
@@ -69,23 +69,23 @@ class Signup extends React.Component<{}, *> {
           />
           <input
             onChange={this.handleFirstNameChanged}
-            placeholder="Vorname"
+            placeholder="Name"
             value={this.state.firstname}
           />
           <input
             onChange={this.handleLastNameChanged}
-            placeholder="Nachname"
+            placeholder="Surname"
             value={this.state.lastname}
           />
           <input
             onChange={this.handlePasswordChanged}
-            placeholder="Passwort"
+            placeholder="Password"
             type="password"
             value={this.state.password}
           />
-          <button onClick={this.handleSubmit}>Account eröffnen</button>
+          <button onClick={this.handleSubmit}>Open account</button>
         </form>
-        {error && <p>Es ist ein Fehler aufgetreten!</p>}
+        {error && <p>An error occurred!</p>}
       </div>
     );
   }

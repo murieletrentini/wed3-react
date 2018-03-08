@@ -79,8 +79,8 @@ class Login extends React.Component<Props, *> {
           />
           <button onClick={this.handleSubmit}>Log-in</button>
         </form>
-        {error && <p>Es ist ein Fehler aufgetreten!</p>}
-        <Link to="/signup">Noch keinen Account?</Link>
+        {error && <p>An error occurred!</p>}
+        <Link to="/signup">Don't have an account?</Link>
       </div>
     );
   }

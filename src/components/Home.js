@@ -11,13 +11,13 @@ const Home = ({isAuthenticated}: Props) => (
   <div>
     { isAuthenticated
       ? <div>
-          <p>Willkommen zurück!</p>
-          <Link to={'/dashboard'}>Zum Dashboard</Link>
+          <p>Welcome back!</p>
+          <Link to={'/dashboard'}>Dashboard</Link>
         </div>
       : <div>
-          <Link to={'/login'}>Einloggen</Link>
-          <p>Falls Sie noch keinen Account besitzen können Sie sich hier registrieren:</p>
-          <Link to={'/signup'}>Registrieren</Link>
+          <Link to={'/login'}>Log In</Link>
+          <p>If you don't have an account yet, sign up here:</p>
+          <Link to={'/signup'}>Sign Up</Link>
         </div>
     }
   </div>
