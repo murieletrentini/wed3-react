@@ -111,6 +111,7 @@ class App extends React.Component<{}, State> {
             exact
             path="/"
             render={props => (
+                (isAuthenticated && user)? <Redirect to="/dashboard" />:
               <Redirect to="/welcome" />
             )}
           />

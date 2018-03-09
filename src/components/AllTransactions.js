@@ -2,8 +2,8 @@ import React from 'react'
 import {Props} from "./Login";
 
 const AllTransactions = ({props}: Props) => (
-    <div>
-        <p>All Transactions</p>
+    <div className="container">
+        <h2>Transactions</h2>
     </div>
 );
 

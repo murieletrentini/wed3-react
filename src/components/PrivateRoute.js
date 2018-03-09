@@ -19,7 +19,7 @@ function PrivateRoute({ component, isAuthenticated, user, token, ...rest }) {
         {...rest}
         render={props => (
           <Redirect
-            to={{ pathname: "/login", state: { from: props.location } }}
+            to={{ pathname: "/welcome", state: { from: props.location } }}
           />
         )}
       />

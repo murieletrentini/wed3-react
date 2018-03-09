@@ -52,13 +52,10 @@ class Login extends React.Component<Props, *> {
   };
 
   render() {
-    const { from } = this.props.location.state || {
-      from: { pathname: "/dashboard" }
-    };
     const { redirectToReferrer, error } = this.state;
 
     if (redirectToReferrer) {
-      return <Redirect to={from} />;
+      return <Redirect to="/dashboard" />;
     }
 
     return (
@@ -77,7 +74,7 @@ class Login extends React.Component<Props, *> {
             type="password"
             value={this.state.password}
           />
-          <button onClick={this.handleSubmit}>Log-in</button>
+          <button onClick={this.handleSubmit}>Login</button>
         </form>
         {error && <p>An error occurred!</p>}
         <Link to="/signup">Don't have an account?</Link>

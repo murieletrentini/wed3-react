@@ -54,7 +54,8 @@ class Signup extends React.Component<{}, *> {
     const { redirectToReferrer, error } = this.state;
 
     if (redirectToReferrer) {
-      return <Redirect to="/login" />;
+      console.log("redirecting to dashboard");
+      return <Redirect to="/dashboard" />;
     }
 
     return (
@@ -83,7 +84,7 @@ class Signup extends React.Component<{}, *> {
             type="password"
             value={this.state.password}
           />
-          <button onClick={this.handleSubmit}>Open account</button>
+          <button onClick={this.handleSubmit}>Login</button>
         </form>
         {error && <p>An error occurred!</p>}
       </div>
