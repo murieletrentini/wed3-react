@@ -1,23 +1,9 @@
 import React from 'react'
 import {Header, Segment, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
-import TableItem from "../presentationComponents/TableItem";
-import {getTransactions} from "../api";
-
+import TableItemLatest from "../presentationComponents/TableItemLatest";
 
 class LatestTransactions extends React.Component {
-    state = {
-        transactions: []
-    };
-
-    componentDidMount() {
-        getTransactions(this.props.token)
-            .then(result => {
-                console.log("transactions ", result.result);
-                this.setState({transactions: result.result});
-            })
-            .catch(error => this.setState({error}));
-    }
 
     render() {
         return (
@@ -37,8 +23,8 @@ class LatestTransactions extends React.Component {
                         </Table.Header>
 
                         <Table.Body>
-                            {this.state.transactions.map(
-                                transaction => <TableItem {...transaction}/>
+                            {this.props.transactions.map(
+                                transaction => <TableItemLatest {...transaction}/>
                             )}
                         </Table.Body>
                     </Table>

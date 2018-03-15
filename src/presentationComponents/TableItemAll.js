@@ -2,8 +2,9 @@ import React from 'react'
 import {Table} from "semantic-ui-react";
 
 //TODO: add key to get rid of warning
-const TableItem = ({from, target, amount, total}) => (
+const TableItemAll = ({date, from, target, amount, total}) => (
     <Table.Row>
+        <Table.Cell>{date}</Table.Cell>
         <Table.Cell>{from}</Table.Cell>
         <Table.Cell>{target}</Table.Cell>
         <Table.Cell>{amount}</Table.Cell>
@@ -11,4 +12,4 @@ const TableItem = ({from, target, amount, total}) => (
     </Table.Row>
 );
 
-export default TableItem
+export default TableItemAll

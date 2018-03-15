@@ -2,7 +2,7 @@
 //https://react.semantic-ui.com/
 import React from "react";
 import {
-    BrowserRouter as Router, Link,
+    BrowserRouter as Router,
     Route,
     withRouter
 } from "react-router-dom";
@@ -18,7 +18,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import * as api from "./api";
 
 import type {User} from "./api";
-import {Menu} from "semantic-ui-react";
+import {Icon, Menu} from "semantic-ui-react";
 
 type State = {
     isAuthenticated: boolean,
@@ -74,32 +74,30 @@ class App extends React.Component<{}, State> {
 
     render() {
         const {isAuthenticated, user, token} = this.state;
-
         const MenuBar = withRouter(({history, location: {pathname}}) => {
             if (isAuthenticated && user) {
                 return (
                     <Menu>
-                        <Menu.Item name='user'>
-                            {user.firstname} {user.lastname} &ndash; {user.accountNr}
-                        </Menu.Item>
-                        <Menu.Item name='dashboard'  onClick={event => {
+                        <Menu.Item header>Account {user.accountNr}</Menu.Item>
+                        <Menu.Item name='dashboard' onClick={event => {
                             event.preventDefault();
                             history.push("/dashboard");
                         }}>
                             Dashboard
                         </Menu.Item>
+                        {/*TODO: change path of transaction to /dashboard/transaction */}
                         <Menu.Item name='transactions' onClick={event => {
                             event.preventDefault();
-                            history.push("/dashboard/transactions");
+                            history.push("/transactions");
                         }}>
-                            Dashboard
+                            All Transactions
                         </Menu.Item>
                         <Menu.Menu position='right'>
-                            <Menu.Item name='logout' onClick={event => {
+                            <Menu.Item className="active" color='blue' name='logout' onClick={event => {
                                 event.preventDefault();
                                 this.signout(() => history.push("/"));
                             }}>
-                                Logout
+                                <Icon name='log out'/> Logout {user.firstname} {user.lastname}
                             </Menu.Item>
                         </Menu.Menu>
                     </Menu>
@@ -140,8 +138,9 @@ class App extends React.Component<{}, State> {
                         token={token}
                         component={Dashboard}
                     />
+                    {/*TODO: change path of transaction to /dashboard/transaction */}
                     <PrivateRoute
-                        path="/dashboard/transactions"
+                        path="/transactions"
                         isAuthenticated={isAuthenticated}
                         token={token}
                         user={user}
