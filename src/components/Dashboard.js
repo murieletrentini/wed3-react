@@ -1,10 +1,21 @@
 import React from 'react'
-import {Props} from "./Login";
+import {Container} from "semantic-ui-react";
+import NewPayment from "./NewPayment";
+import LatestTransactions from "./LatestTransactions";
 
-const Dashboard = ({props}: Props) => (
-    <div className="container">
-        <h2>Dashboard</h2>
-    </div>
-);
+class Dashboard extends React.Component {
+    state = {
+
+    };
+
+    render() {
+        return (
+            <Container>
+                <NewPayment {...this.props}></NewPayment>
+                <LatestTransactions {...this.props}></LatestTransactions>
+            </Container>)
+    }
+}
+
 
 export default Dashboard
