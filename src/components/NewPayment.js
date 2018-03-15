@@ -1,9 +1,11 @@
 import React from 'react'
 import {Button, Form, Input, Segment, Header} from "semantic-ui-react";
-import {transfer} from "../api";
+import {getAccount, transfer} from "../api";
 
 class NewPayment extends React.Component {
-    state = {};
+    state = {
+        accountNrPrompt:'Please specify the target account number.'
+    };
 
     handleSubmit = (event: Event) => {
         event.preventDefault();
@@ -20,6 +22,10 @@ class NewPayment extends React.Component {
     handleTargetChange = (event: Event) => {
         if (event.target instanceof HTMLInputElement) {
             this.setState({targetNr: event.target.value});
+            getAccount(event.target.value, this.props.token).then(result => {
+                this.setState({ accountNrPrompt:result.owner.firstname + " " + result.owner.lastname});
+            })
+                .catch(error => {this.setState({error:error, accountNrPrompt: 'Unknown account nr specified'});});
         }
     };
 
@@ -55,6 +61,7 @@ class NewPayment extends React.Component {
                                 onChange={this.handleTargetChange}
                                 placeholder="Target Account Number"
                                 value={this.state.targetNr}/>
+                            <span>{this.state.accountNrPrompt}</span>
                             <Input
                                 onChange={this.handleAmountChange}
                                 placeholder="Amount in CHF"
