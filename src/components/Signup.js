@@ -70,6 +70,11 @@ class Signup extends React.Component {
             return <Redirect to="/dashboard"/>;
         }
 
+        this.basicValidationConfig = {
+            required: true,
+            minLength: 3
+        };
+
         return (
             <div>
                 <Menu>
@@ -91,17 +96,43 @@ class Signup extends React.Component {
                                 </Message>
                                 }
 
-                                <ValidatedFormField placeholder="Firstname" icon="user" value={this.state.firstname} onChange={this.handleFirstNameChanged} />
+                                <ValidatedFormField placeholder="Firstname"
+                                                    icon="user"
+                                                    type="text"
+                                                    validations={this.basicValidationConfig}
+                                                    value={this.state.firstname}
+                                                    onChange={this.handleFirstNameChanged} />
 
-                                <ValidatedFormField placeholder="Lastname" icon="user" value={this.state.lastname} onChange={this.handleLastNameChanged} />
+                                <ValidatedFormField placeholder="Lastname"
+                                                    icon="user"
+                                                    type="text"
+                                                    validations={this.basicValidationConfig}
+                                                    value={this.state.lastname}
+                                                    onChange={this.handleLastNameChanged} />
 
-                                <ValidatedFormField placeholder="Username" icon="user" value={this.state.login} onChange={this.handleLoginChanged} />
+                                <ValidatedFormField placeholder="Username"
+                                                    icon="user"
+                                                    type="text"
+                                                    validations={this.basicValidationConfig}
+                                                    value={this.state.login}
+                                                    onChange={this.handleLoginChanged} />
 
-                                <ValidatedFormField placeholder="Password" icon="lock" value={this.state.password} onChange={this.handlePasswordChanged} />
+                                <ValidatedFormField placeholder="Password"
+                                                    icon="lock"
+                                                    type="password"
+                                                    validations={this.basicValidationConfig}
+                                                    value={this.state.password}
+                                                    onChange={this.handlePasswordChanged} />
 
-                                <ValidatedFormField placeholder="Confirm Password" icon="lock" value={this.state.confirmedPassword} onChange={this.handleConfirmPasswordChanged} />
+                                <ValidatedFormField placeholder="Confirm Password"
+                                                    icon="lock"
+                                                    type="password"
+                                                    validations={this.basicValidationConfig}
+                                                    value={this.state.confirmedPassword}
+                                                    onChange={this.handleConfirmPasswordChanged} />
 
                                 <Button size='large' content='Login' color='linkedin'/>
+
                             </Grid.Column>
                         </Grid>
                     </Segment>

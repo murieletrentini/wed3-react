@@ -67,6 +67,11 @@ class Login extends React.Component {
             return <Redirect to={from} />;
         }
 
+        this.basicValidationConfig = {
+            required: true,
+            minLength: 3
+        };
+
         return (
             <div>
                 <Menu>
@@ -88,8 +93,20 @@ class Login extends React.Component {
                                 </Message>
                                 }
 
-                                <ValidatedFormField placeholder="Login" icon="user" value={this.state.login} onChange={this.handleLoginChanged} />
-                                <ValidatedFormField placeholder="Password" icon="lock" value={this.state.password} onChange={this.handlePasswordChanged} />
+                                <ValidatedFormField placeholder="Login"
+                                                    icon="user"
+                                                    type="text"
+                                                    value={this.state.login}
+                                                    validations={this.basicValidationConfig}
+                                                    onChange={this.handleLoginChanged} />
+
+                                <ValidatedFormField placeholder="Password"
+                                                    icon="lock"
+                                                    type="password"
+                                                    value={this.state.password}
+                                                    validations={this.basicValidationConfig}
+                                                    onChange={this.handlePasswordChanged} />
+
                                 <Button size='large' content='Login' color='linkedin'/>
                             </Grid.Column>
                         </Grid>
