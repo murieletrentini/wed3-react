@@ -5,6 +5,7 @@ import {getTransactions} from "../api";
 
 
 class AllTransactions extends React.Component {
+
     state = {
         transactions: []
     };

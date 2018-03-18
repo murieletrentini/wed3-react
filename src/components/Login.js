@@ -1,8 +1,9 @@
 // @flow
 
 import React from "react";
-import {Redirect, Link} from "react-router-dom";
-import {Button, Form, Input, Segment} from "semantic-ui-react";
+import {Redirect} from "react-router-dom";
+import {Button, Form, Segment, Menu, Message, Grid} from "semantic-ui-react";
+import ValidatedFormField from "./ValidatedFormField";
 
 export type Props = {
     /* Callback to submit an authentication request to the server */
@@ -18,7 +19,8 @@ export type Props = {
     }
 };
 
-class Login extends React.Component<Props, *> {
+class Login extends React.Component {
+
     state = {
         login: "",
         password: "",
@@ -50,36 +52,49 @@ class Login extends React.Component<Props, *> {
         });
     };
 
+    handleSignupClicked = (event: Event) => {
+        event.preventDefault();
+        window.location = '/signup';
+    };
+
     render() {
-        const {redirectToReferrer, error} = this.state;
+        const { redirectToReferrer, error } = this.state;
+        const { from } = this.props.location.state || {
+            from: { pathname: "/dashboard" }
+        };
 
         if (redirectToReferrer) {
-            return <Redirect to="/dashboard"/>;
+            return <Redirect to={from} />;
         }
 
         return (
             <div>
-                <h1>Bank of Rapperswil</h1>
+                <Menu>
+                    <Menu.Item header>Bank of Rapperswil</Menu.Item>
+                    <Menu.Item position='right'>
+                        <Button size='large' content='Register' color='linkedin' onClick={this.handleSignupClicked}/>
+                    </Menu.Item>
+                </Menu>
                 <Form onSubmit={this.handleSubmit}>
                     <Segment>
-                        <Form.Field>
-                            <Input
-                                onChange={this.handleLoginChanged}
-                                placeholder="Login"
-                                icon="user" iconPosition="left"
-                                value={this.state.login}/>
-                            <Input
-                                onChange={this.handlePasswordChanged}
-                                placeholder="Password"
-                                icon="lock" iconPosition="left"
-                                type="password"
-                                value={this.state.password}/>
-                        </Form.Field>
-                        <Button size='large' content='Login' color='linkedin'/>
+
+                        <Grid container>
+
+                            <Grid.Column>
+                                {error &&
+                                <Message negative>
+                                    <Message.Header>Invalid credentials entered</Message.Header>
+                                    <p>Please try again</p>
+                                </Message>
+                                }
+
+                                <ValidatedFormField placeholder="Login" icon="user" value={this.state.login} onChange={this.handleLoginChanged} />
+                                <ValidatedFormField placeholder="Password" icon="lock" value={this.state.password} onChange={this.handlePasswordChanged} />
+                                <Button size='large' content='Login' color='linkedin'/>
+                            </Grid.Column>
+                        </Grid>
                     </Segment>
                 </Form>
-                {error && <p>An error occurred!</p>}
-                <Link to="/signup">Don't have an account?</Link>
             </div>
         );
     }

@@ -26,7 +26,8 @@ type State = {
     user: ?User
 };
 
-class App extends React.Component<{}, State> {
+class App extends React.Component {
+
     constructor(props: any) {
         super(props);
         const token = sessionStorage.getItem("token");

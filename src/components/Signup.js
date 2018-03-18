@@ -3,14 +3,19 @@
 import React from "react";
 import {Redirect} from "react-router-dom";
 
+import {Button, Form, Segment, Menu, Message, Grid} from "semantic-ui-react";
+import ValidatedFormField from "./ValidatedFormField";
 import {signup} from "../api";
 
-class Signup extends React.Component<{}, *> {
+
+class Signup extends React.Component {
+
     state = {
         login: "",
         firstname: "",
         lastname: "",
         password: "",
+        confirmedPassword: "",
         error: null,
         redirectToReferrer: false
     };
@@ -39,6 +44,12 @@ class Signup extends React.Component<{}, *> {
         }
     };
 
+    handleConfirmPasswordChanged = (event: Event) => {
+        if (event.target instanceof HTMLInputElement) {
+            this.setState({confirmedPassword: event.target.value});
+        }
+    };
+
     //TODO: gemäss Spezifikation "User wird auf dem Server angelegt und automatisch eingelogged."
     handleSubmit = (event: Event) => {
         event.preventDefault();
@@ -61,33 +72,40 @@ class Signup extends React.Component<{}, *> {
 
         return (
             <div>
-                <h1>Bank of Rapperswil</h1>
-                <form>
-                    <h2>Sign Up</h2>
-                    <input
-                        onChange={this.handleLoginChanged}
-                        placeholder="Login"
-                        value={this.state.login}
-                    />
-                    <input
-                        onChange={this.handleFirstNameChanged}
-                        placeholder="Name"
-                        value={this.state.firstname}
-                    />
-                    <input
-                        onChange={this.handleLastNameChanged}
-                        placeholder="Surname"
-                        value={this.state.lastname}
-                    />
-                    <input
-                        onChange={this.handlePasswordChanged}
-                        placeholder="Password"
-                        type="password"
-                        value={this.state.password}
-                    />
-                    <button onClick={this.handleSubmit}>Login</button>
-                </form>
-                {error && <p>An error occurred!</p>}
+                <Menu>
+                    <Menu.Item header>Bank of Rapperswil</Menu.Item>
+                    <Menu.Item position='right'>
+                        <Button size='large' content='Register' color='linkedin' onClick={this.handleSignupClicked}/>
+                    </Menu.Item>
+                </Menu>
+                <Form onSubmit={this.handleSubmit}>
+                    <Segment>
+
+                        <Grid container>
+
+                            <Grid.Column>
+                                {error &&
+                                <Message negative>
+                                    <Message.Header>Unable to register new user</Message.Header>
+                                    <p>Please try again</p>
+                                </Message>
+                                }
+
+                                <ValidatedFormField placeholder="Firstname" icon="user" value={this.state.firstname} onChange={this.handleFirstNameChanged} />
+
+                                <ValidatedFormField placeholder="Lastname" icon="user" value={this.state.lastname} onChange={this.handleLastNameChanged} />
+
+                                <ValidatedFormField placeholder="Username" icon="user" value={this.state.login} onChange={this.handleLoginChanged} />
+
+                                <ValidatedFormField placeholder="Password" icon="lock" value={this.state.password} onChange={this.handlePasswordChanged} />
+
+                                <ValidatedFormField placeholder="Confirm Password" icon="lock" value={this.state.confirmedPassword} onChange={this.handleConfirmPasswordChanged} />
+
+                                <Button size='large' content='Login' color='linkedin'/>
+                            </Grid.Column>
+                        </Grid>
+                    </Segment>
+                </Form>
             </div>
         );
     }
