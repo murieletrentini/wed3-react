@@ -2,7 +2,7 @@
 
 import React from "react";
 import {Redirect} from "react-router-dom";
-import {Button, Form, Segment, Menu, Message, Grid} from "semantic-ui-react";
+import {Button, Form, Segment, Menu, Message, Grid, Container} from "semantic-ui-react";
 import ValidatedFormField from "./ValidatedFormField";
 
 export type Props = {
@@ -58,13 +58,13 @@ class Login extends React.Component {
     };
 
     render() {
-        const { redirectToReferrer, error } = this.state;
-        const { from } = this.props.location.state || {
-            from: { pathname: "/dashboard" }
+        const {redirectToReferrer, error} = this.state;
+        const {from} = this.props.location.state || {
+            from: {pathname: "/dashboard"}
         };
 
         if (redirectToReferrer) {
-            return <Redirect to={from} />;
+            return <Redirect to={from}/>;
         }
 
         this.basicValidationConfig = {
@@ -80,38 +80,40 @@ class Login extends React.Component {
                         <Button size='large' content='Register' color='linkedin' onClick={this.handleSignupClicked}/>
                     </Menu.Item>
                 </Menu>
-                <Form onSubmit={this.handleSubmit}>
-                    <Segment>
+                <Container>
+                    <Form onSubmit={this.handleSubmit}>
+                        <Segment>
 
-                        <Grid container>
+                            <Grid container>
 
-                            <Grid.Column>
-                                {error &&
-                                <Message negative>
-                                    <Message.Header>Invalid credentials entered</Message.Header>
-                                    <p>Please try again</p>
-                                </Message>
-                                }
+                                <Grid.Column>
+                                    {error &&
+                                    <Message negative>
+                                        <Message.Header>Invalid credentials entered</Message.Header>
+                                        <p>Please try again</p>
+                                    </Message>
+                                    }
 
-                                <ValidatedFormField placeholder="Login"
-                                                    icon="user"
-                                                    type="text"
-                                                    value={this.state.login}
-                                                    validations={this.basicValidationConfig}
-                                                    onChange={this.handleLoginChanged} />
+                                    <ValidatedFormField placeholder="Login"
+                                                        icon="user"
+                                                        type="text"
+                                                        value={this.state.login}
+                                                        validations={this.basicValidationConfig}
+                                                        onChange={this.handleLoginChanged}/>
 
-                                <ValidatedFormField placeholder="Password"
-                                                    icon="lock"
-                                                    type="password"
-                                                    value={this.state.password}
-                                                    validations={this.basicValidationConfig}
-                                                    onChange={this.handlePasswordChanged} />
+                                    <ValidatedFormField placeholder="Password"
+                                                        icon="lock"
+                                                        type="password"
+                                                        value={this.state.password}
+                                                        validations={this.basicValidationConfig}
+                                                        onChange={this.handlePasswordChanged}/>
 
-                                <Button size='large' content='Login' color='linkedin'/>
-                            </Grid.Column>
-                        </Grid>
-                    </Segment>
-                </Form>
+                                    <Button size='large' content='Login' color='linkedin'/>
+                                </Grid.Column>
+                            </Grid>
+                        </Segment>
+                    </Form>
+                </Container>
             </div>
         );
     }
