@@ -8,36 +8,44 @@ class AllTransactions extends React.Component {
 
     state = {
         transactions: [],
-        year: 0,
-        month: 0
+        year: new Date().getFullYear(),
+        month: new Date().getMonth()
     };
 
-    monthOptions = [{key: 1, value: 1, text: 'January'}, {key: 2, value: 2, text: 'February'},
-        {key: 3, value: 3, text: 'March'}, {key: 4, value: 4, text: 'April'},
-        {key: 5, value: 5, text: 'May'}, {key: '6', value: '6', text: 'June'},
-        {key: '7', value: '7', text: 'July'}, {key: '8', value: '8', text: 'August'},
-        {key: '9', value: '9', text: 'September'}, {key: '10', value: '10', text: 'October'},
-        {key: '11', value: '11', text: 'November'}, {key: '12', value: '12', text: 'December'}];
+    monthOptions = [{key: 0, value: 0, text: 'January'}, {key: 1, value: 1, text: 'February'},
+        {key: 2, value: 2, text: 'March'}, {key: 3, value: 3, text: 'April'},
+        {key: 4, value: 4, text: 'May'}, {key: 5, value: 5, text: 'June'},
+        {key: 6, value: 6, text: 'July'}, {key: 7, value: 7, text: 'August'},
+        {key: 8, value: 8, text: 'September'}, {key: 9, value: 9, text: 'October'},
+        {key: 10, value: 10, text: 'November'}, {key: 11, value: 11, text: 'December'}];
 
     yearOptions = [{key: 2016, value: 2016, text: '2016'},
         {key: 2017, value: 2017, text: '2017'},
         {key: 2018, value: 2018, text: '2018'}];
 
-    handleYearChange = (event: Event) => {
-        if (event.target instanceof HTMLInputElement) {
-            this.setState({login: event.target.value});
-        }
+    handleYearChanged = (event: SyntheticEvent, data: object) => {
+        this.updateTransactions({year: data.value, month: this.state.month})
+    };
+    handleMonthChanged = (event: SyntheticEvent, data: object) => {
+        this.updateTransactions({year: this.state.year, month: data.value})
     };
 
     componentDidMount() {
-        getTransactions(this.props.token)
+        this.updateTransactions({year: this.state.year, month: this.state.month});
+    }
+
+    //TODO: add page parameter to get the next 10 entries
+    updateTransactions = ({year, month}) => {
+        this.setState({month: month, year: year});
+        let from = new Date(Date.UTC(year, month));
+        let to = new Date(Date.UTC(year, month+1, 0));
+        getTransactions(this.props.token, from, to, 10, 0)
             .then(result => {
                 console.log("transactions ", result.result);
                 this.setState({transactions: result.result});
             })
             .catch(error => this.setState({error}));
-
-    }
+    };
 
     render() {
         return (
@@ -52,14 +60,16 @@ class AllTransactions extends React.Component {
                             <Grid.Column>
                                 <Segment basic>
                                     <Dropdown placeholder='Select Year' fluid search selection
-                                              options={this.yearOptions} onChange="this.handleYearChange"/>
+                                              options={this.yearOptions} defaultValue={this.state.year}
+                                              onChange={this.handleYearChanged}/>
                                 </Segment>
                             </Grid.Column>
                             <Divider vertical/>
                             <Grid.Column>
                                 <Segment basic>
                                     <Dropdown placeholder='Select Month' fluid search selection
-                                              options={this.monthOptions}/>
+                                              options={this.monthOptions} defaultValue={this.state.month}
+                                              onChange={this.handleMonthChanged}/>
                                 </Segment>
                             </Grid.Column>
                         </Grid>
