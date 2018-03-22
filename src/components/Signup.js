@@ -55,10 +55,13 @@ class Signup extends React.Component {
         event.preventDefault();
         const {login, firstname, lastname, password} = this.state;
         signup(login, firstname, lastname, password)
-            .then(result => {
-                console.log("Signup result ", result);
-                this.setState({redirectToReferrer: true, error: null});
-            })
+            .then(this.props.authenticate(login, password, error => {
+                if (error) {
+                    this.setState({error});
+                } else {
+                    this.setState({redirectToReferrer: true, error: null});
+                }
+            }))
             .catch(error => this.setState({error}));
     };
 
@@ -101,35 +104,35 @@ class Signup extends React.Component {
                                                     type="text"
                                                     validations={this.basicValidationConfig}
                                                     value={this.state.firstname}
-                                                    onChange={this.handleFirstNameChanged} />
+                                                    onChange={this.handleFirstNameChanged}/>
 
                                 <ValidatedFormField placeholder="Lastname"
                                                     icon="user"
                                                     type="text"
                                                     validations={this.basicValidationConfig}
                                                     value={this.state.lastname}
-                                                    onChange={this.handleLastNameChanged} />
+                                                    onChange={this.handleLastNameChanged}/>
 
                                 <ValidatedFormField placeholder="Username"
                                                     icon="user"
                                                     type="text"
                                                     validations={this.basicValidationConfig}
                                                     value={this.state.login}
-                                                    onChange={this.handleLoginChanged} />
+                                                    onChange={this.handleLoginChanged}/>
 
                                 <ValidatedFormField placeholder="Password"
                                                     icon="lock"
                                                     type="password"
                                                     validations={this.basicValidationConfig}
                                                     value={this.state.password}
-                                                    onChange={this.handlePasswordChanged} />
+                                                    onChange={this.handlePasswordChanged}/>
 
                                 <ValidatedFormField placeholder="Confirm Password"
                                                     icon="lock"
                                                     type="password"
                                                     validations={this.basicValidationConfig}
                                                     value={this.state.confirmedPassword}
-                                                    onChange={this.handleConfirmPasswordChanged} />
+                                                    onChange={this.handleConfirmPasswordChanged}/>
 
                                 <Button size='large' content='Login' color='linkedin'/>
 

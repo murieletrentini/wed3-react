@@ -10,10 +10,11 @@ class NewPayment extends React.Component {
     handleSubmit = (event: Event) => {
         event.preventDefault();
         const {targetNr, amount} = this.state;
-        this.props.updateSibling();
+
         transfer(targetNr, amount, this.props.token)
             .then(result => {
                 console.log("transfer ", result);
+                this.props.updateSibling();
                 this.setState({targetNr: 'Target Account Number', amount: 0});
             })
             .catch(error => this.setState({error}));
