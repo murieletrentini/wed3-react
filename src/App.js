@@ -89,7 +89,7 @@ class App extends React.Component {
                         {/*TODO: change path of transaction to /dashboard/transaction */}
                         <Menu.Item name='transactions' onClick={event => {
                             event.preventDefault();
-                            history.push("/transactions");
+                            history.push("/dashboard/transactions");
                         }}>
                             All Transactions
                         </Menu.Item>
@@ -138,6 +138,7 @@ class App extends React.Component {
             these components can do API calls. PrivateRoute is not part of react-router but our own implementation.
           */}
                     <PrivateRoute
+                        exact
                         path="/dashboard"
                         isAuthenticated={isAuthenticated}
                         user={user}
@@ -146,7 +147,7 @@ class App extends React.Component {
                     />
                     {/*TODO: change path of transaction to /dashboard/transaction */}
                     <PrivateRoute
-                        path="/transactions"
+                        path="/dashboard/transactions"
                         isAuthenticated={isAuthenticated}
                         token={token}
                         user={user}
