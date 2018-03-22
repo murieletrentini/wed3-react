@@ -14,48 +14,86 @@ class Signup extends React.Component {
         login: "",
         firstname: "",
         lastname: "",
-        password: "",
-        confirmedPassword: "",
+        password: {
+            value: "",
+            placeholder: "Password"
+        },
+        confirmedPassword: {
+            value: "",
+            placeholder: "Confirm Password"
+        },
         error: null,
+        validationErrorMap: new Map(),
+        hasValidationErrors: true,
         redirectToReferrer: false
     };
 
-    handleLoginChanged = (event: Event) => {
+    handleLoginCallback = (event: Event, hasErrors : Boolean) => {
         if (event.target instanceof HTMLInputElement) {
+            this.handleValidationComponents(event, hasErrors);
             this.setState({login: event.target.value});
         }
     };
 
-    handleFirstNameChanged = (event: Event) => {
+    handleFirstNameCallback = (event: Event, hasErrors : Boolean) => {
         if (event.target instanceof HTMLInputElement) {
+            this.handleValidationComponents(event, hasErrors);
             this.setState({firstname: event.target.value});
         }
     };
 
-    handleLastNameChanged = (event: Event) => {
+    handleLastNameCallback = (event: Event, hasErrors : Boolean) => {
         if (event.target instanceof HTMLInputElement) {
+            this.handleValidationComponents(event, hasErrors);
             this.setState({lastname: event.target.value});
         }
     };
 
-    handlePasswordChanged = (event: Event) => {
+    handlePasswordCallback = (event: Event, hasErrors : Boolean) => {
         if (event.target instanceof HTMLInputElement) {
-            this.setState({password: event.target.value});
+            let password = {...this.state.password};
+            password.value = event.target.value;
+
+            this.handleValidationComponents(event, hasErrors);
+            this.setState({password: password});
         }
     };
 
-    handleConfirmPasswordChanged = (event: Event) => {
+    handleConfirmPasswordCallback = (event: Event, hasErrors : Boolean) => {
         if (event.target instanceof HTMLInputElement) {
-            this.setState({confirmedPassword: event.target.value});
+            let confirmedPassword = {...this.state.confirmedPassword};
+            confirmedPassword.value = event.target.value;
+
+            this.handleValidationComponents(event, hasErrors);
+
+            this.setState({confirmedPassword: confirmedPassword});
         }
+    };
+
+    handleValidationComponents = (event: Event, elementHasErrors : Boolean) => {
+        let validationErrorMap = this.state.validationErrorMap;
+        validationErrorMap.set(event.target.placeholder, elementHasErrors);
+
+        this.setState({validationErrorMap: validationErrorMap}, () => {
+
+            let hasErrors = false;
+            this.state.validationErrorMap.forEach((value, key, mapObj) => {
+                if (value) {
+                    hasErrors = value;
+                }
+            });
+
+            this.setState({hasValidationErrors: hasErrors});
+        });
     };
 
     //TODO: gemäss Spezifikation "User wird auf dem Server angelegt und automatisch eingelogged."
     handleSubmit = (event: Event) => {
         event.preventDefault();
+
         const {login, firstname, lastname, password} = this.state;
-        signup(login, firstname, lastname, password)
-            .then(this.props.authenticate(login, password, error => {
+        signup(login, firstname, lastname, password.value)
+            .then(this.props.authenticate(login, password.value, error => {
                 if (error) {
                     this.setState({error});
                 } else {
@@ -69,13 +107,17 @@ class Signup extends React.Component {
         const {redirectToReferrer, error} = this.state;
 
         if (redirectToReferrer) {
-            console.log("redirecting to dashboard");
             return <Redirect to="/dashboard"/>;
         }
 
         this.basicValidationConfig = {
             required: true,
             minLength: 3
+        };
+
+        this.confirmValidationConfig = {
+            ...this.basicValidationConfig,
+            equalTo: this.state.password
         };
 
         return (
@@ -95,7 +137,7 @@ class Signup extends React.Component {
                                 {error &&
                                 <Message negative>
                                     <Message.Header>Unable to register new user</Message.Header>
-                                    <p>Please try again</p>
+                                    <p>Error occured while trying to register new user</p>
                                 </Message>
                                 }
 
@@ -104,37 +146,37 @@ class Signup extends React.Component {
                                                     type="text"
                                                     validations={this.basicValidationConfig}
                                                     value={this.state.firstname}
-                                                    onChange={this.handleFirstNameChanged}/>
+                                                    callback={this.handleFirstNameCallback}/>
 
                                 <ValidatedFormField placeholder="Lastname"
                                                     icon="user"
                                                     type="text"
                                                     validations={this.basicValidationConfig}
                                                     value={this.state.lastname}
-                                                    onChange={this.handleLastNameChanged}/>
+                                                    callback={this.handleLastNameCallback}/>
 
                                 <ValidatedFormField placeholder="Username"
                                                     icon="user"
                                                     type="text"
                                                     validations={this.basicValidationConfig}
                                                     value={this.state.login}
-                                                    onChange={this.handleLoginChanged}/>
+                                                    callback={this.handleLoginCallback}/>
 
-                                <ValidatedFormField placeholder="Password"
-                                                    icon="lock"
+                                <ValidatedFormField icon="lock"
                                                     type="password"
                                                     validations={this.basicValidationConfig}
-                                                    value={this.state.password}
-                                                    onChange={this.handlePasswordChanged}/>
+                                                    value={this.state.password.value}
+                                                    placeholder={this.state.password.placeholder}
+                                                    callback={this.handlePasswordCallback} />
 
-                                <ValidatedFormField placeholder="Confirm Password"
-                                                    icon="lock"
+                                <ValidatedFormField icon="lock"
                                                     type="password"
-                                                    validations={this.basicValidationConfig}
-                                                    value={this.state.confirmedPassword}
-                                                    onChange={this.handleConfirmPasswordChanged}/>
+                                                    validations={this.confirmValidationConfig}
+                                                    value={this.state.confirmedPassword.value}
+                                                    placeholder={this.state.confirmedPassword.placeholder}
+                                                    callback={this.handleConfirmPasswordCallback} />
 
-                                <Button size='large' content='Login' color='linkedin'/>
+                                <Button size='large' content='Signup' color='linkedin' disabled={this.state.hasValidationErrors} />
 
                             </Grid.Column>
                         </Grid>

@@ -25,7 +25,8 @@ class Login extends React.Component {
         login: "",
         password: "",
         error: undefined,
-        redirectToReferrer: false
+        redirectToReferrer: false,
+        redirectToRegister: false
     };
 
     handleLoginChanged = (event: Event) => {
@@ -54,17 +55,21 @@ class Login extends React.Component {
 
     handleSignupClicked = (event: Event) => {
         event.preventDefault();
-        window.location = '/signup';
+        this.setState({redirectToRegister: true});
     };
 
     render() {
-        const {redirectToReferrer, error} = this.state;
-        const {from} = this.props.location.state || {
-            from: {pathname: "/dashboard"}
+        const { redirectToReferrer, redirectToRegister, error } = this.state;
+        const { from } = this.props.location.state || {
+            from: { pathname: "/dashboard" }
         };
 
         if (redirectToReferrer) {
             return <Redirect to={from}/>;
+        }
+
+        if (redirectToRegister) {
+            return <Redirect to="/signup" />
         }
 
         this.basicValidationConfig = {
