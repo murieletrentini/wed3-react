@@ -23,10 +23,10 @@ class ValidatedFormField extends React.Component {
     };
 
     validateEqualTo = (value: any, otherElement: any) => {
-        var otherValue = otherElement.props.value;
+        var otherValue = otherElement.value;
 
         if (value !== otherValue) {
-            let message = this.props.placeholder + " is not equal to " + otherElement.props.placeholder;
+            let message = this.props.placeholder + " is not equal to " + otherElement.placeholder;
             this.setState(state => ({messages: state.messages.concat([message])}))
         }
     };

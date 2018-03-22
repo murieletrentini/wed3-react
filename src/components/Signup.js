@@ -14,8 +14,14 @@ class Signup extends React.Component {
         login: "",
         firstname: "",
         lastname: "",
-        password: "",
-        confirmedPassword: "",
+        password: {
+            value: "",
+            placeholder: "Password"
+        },
+        confirmedPassword: {
+            value: "",
+            placeholder: "Confirm Password"
+        },
         error: null,
         redirectToReferrer: false
     };
@@ -40,13 +46,17 @@ class Signup extends React.Component {
 
     handlePasswordChanged = (event: Event) => {
         if (event.target instanceof HTMLInputElement) {
-            this.setState({password: event.target.value});
+            let password = {...this.state.password};
+            password.value = event.target.value;
+            this.setState({password});
         }
     };
 
     handleConfirmPasswordChanged = (event: Event) => {
         if (event.target instanceof HTMLInputElement) {
-            this.setState({confirmedPassword: event.target.value});
+            let confirmedPassword = {...this.state.confirmedPassword};
+            confirmedPassword.value = event.target.value;
+            this.setState({confirmedPassword});
         }
     };
 
@@ -54,8 +64,8 @@ class Signup extends React.Component {
     handleSubmit = (event: Event) => {
         event.preventDefault();
         const {login, firstname, lastname, password} = this.state;
-        signup(login, firstname, lastname, password)
-            .then(this.props.authenticate(login, password, error => {
+        signup(login, firstname, lastname, password.value)
+            .then(this.props.authenticate(login, password.value, error => {
                 if (error) {
                     this.setState({error});
                 } else {
@@ -78,6 +88,11 @@ class Signup extends React.Component {
             minLength: 3
         };
 
+        this.confirmValidationConfig = {
+            ...this.basicValidationConfig,
+            equalTo: this.state.password
+        };
+
         return (
             <div>
                 <Menu>
@@ -95,7 +110,7 @@ class Signup extends React.Component {
                                 {error &&
                                 <Message negative>
                                     <Message.Header>Unable to register new user</Message.Header>
-                                    <p>Please try again</p>
+                                    <p>Please solve all warnings and try again</p>
                                 </Message>
                                 }
 
@@ -120,21 +135,21 @@ class Signup extends React.Component {
                                                     value={this.state.login}
                                                     onChange={this.handleLoginChanged}/>
 
-                                <ValidatedFormField placeholder="Password"
-                                                    icon="lock"
+                                <ValidatedFormField icon="lock"
                                                     type="password"
                                                     validations={this.basicValidationConfig}
-                                                    value={this.state.password}
-                                                    onChange={this.handlePasswordChanged}/>
+                                                    value={this.state.password.value}
+                                                    placeholder={this.state.password.placeholder}
+                                                    onChange={this.handlePasswordChanged} />
 
-                                <ValidatedFormField placeholder="Confirm Password"
-                                                    icon="lock"
+                                <ValidatedFormField icon="lock"
                                                     type="password"
-                                                    validations={this.basicValidationConfig}
-                                                    value={this.state.confirmedPassword}
-                                                    onChange={this.handleConfirmPasswordChanged}/>
+                                                    validations={this.confirmValidationConfig}
+                                                    value={this.state.confirmedPassword.value}
+                                                    placeholder={this.state.confirmedPassword.placeholder}
+                                                    onChange={this.handleConfirmPasswordChanged} />
 
-                                <Button size='large' content='Login' color='linkedin'/>
+                                <Button size='large' content='Signup' color='linkedin'/>
 
                             </Grid.Column>
                         </Grid>
