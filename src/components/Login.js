@@ -26,17 +26,21 @@ class Login extends React.Component {
         password: "",
         error: undefined,
         redirectToReferrer: false,
-        redirectToRegister: false
+        redirectToRegister: false,
+        validationErrorMap: new Map(),
+        hasValidationErrors: true,
     };
 
-    handleLoginChanged = (event: Event) => {
+    handleLoginCallback = (event: Event, hasErrors : Boolean) => {
         if (event.target instanceof HTMLInputElement) {
+            this.handleValidationComponents(event, hasErrors);
             this.setState({login: event.target.value});
         }
     };
 
-    handlePasswordChanged = (event: Event) => {
+    handlePasswordCallback = (event: Event, hasErrors : Boolean) => {
         if (event.target instanceof HTMLInputElement) {
+            this.handleValidationComponents(event, hasErrors);
             this.setState({password: event.target.value});
         }
     };
@@ -57,6 +61,24 @@ class Login extends React.Component {
         event.preventDefault();
         this.setState({redirectToRegister: true});
     };
+
+    handleValidationComponents = (event: Event, elementHasErrors : Boolean) => {
+        let validationErrorMap = this.state.validationErrorMap;
+        validationErrorMap.set(event.target.placeholder, elementHasErrors);
+
+        this.setState({validationErrorMap: validationErrorMap}, () => {
+
+            let hasErrors = false;
+            this.state.validationErrorMap.forEach((value, key, mapObj) => {
+                if (value) {
+                    hasErrors = value;
+                }
+            });
+
+            this.setState({hasValidationErrors: hasErrors});
+        });
+    };
+
 
     render() {
         const { redirectToReferrer, redirectToRegister, error } = this.state;
@@ -104,16 +126,16 @@ class Login extends React.Component {
                                                         type="text"
                                                         value={this.state.login}
                                                         validations={this.basicValidationConfig}
-                                                        onChange={this.handleLoginChanged}/>
+                                                        callback={this.handleLoginCallback}/>
 
                                     <ValidatedFormField placeholder="Password"
                                                         icon="lock"
                                                         type="password"
                                                         value={this.state.password}
                                                         validations={this.basicValidationConfig}
-                                                        onChange={this.handlePasswordChanged}/>
+                                                        callback={this.handlePasswordCallback}/>
 
-                                    <Button size='large' content='Login' color='linkedin'/>
+                                    <Button size='large' content='Login' color='linkedin' disabled={this.state.hasValidationErrors}/>
                                 </Grid.Column>
                             </Grid>
                         </Segment>
