@@ -11,14 +11,20 @@ class ValidatedFormField extends React.Component {
     validateIsEmpty = (value : any) => {
         if (value === "") {
             let message = this.props.placeholder + " is mandatory";
-            this.setState(state => ({messages: state.messages.concat([message])}))
+            this.setState(state => ({messages: state.messages.concat([message])}));
+            return false;
+        } else {
+            return true;
         }
     };
 
     validateMinLength = (value : any, minLength : Number) => {
-        if (value.length <= minLength) {
+        if (value.length < minLength) {
             let message = this.props.placeholder + " requires at least " + minLength + " characters";
-            this.setState(state => ({messages: state.messages.concat([message])}))
+            this.setState(state => ({messages: state.messages.concat([message])}));
+            return false;
+        } else {
+            return true;
         }
     };
 
@@ -27,7 +33,10 @@ class ValidatedFormField extends React.Component {
 
         if (value !== otherValue) {
             let message = this.props.placeholder + " is not equal to " + otherElement.placeholder;
-            this.setState(state => ({messages: state.messages.concat([message])}))
+            this.setState(state => ({messages: state.messages.concat([message])}));
+            return false;
+        } else {
+            return true;
         }
     };
 
@@ -41,26 +50,34 @@ class ValidatedFormField extends React.Component {
         // validate configured validations
         if (validations) {
 
+            let hasErrors = false;
+
             Object.keys(validations).forEach(function (key) {
                 let validationValue = validations[key];
 
                 if (key === 'required' && validationValue === true ) {
-                    this.validateIsEmpty(value)
+                    if (!this.validateIsEmpty(value)) {
+                        hasErrors = true;
+                    }
                 }
 
                 if (key === "minLength") {
-                    this.validateMinLength(value, validationValue)
+                    if (!this.validateMinLength(value, validationValue)) {
+                        hasErrors = true;
+                    }
                 }
 
                 if (key === "equalTo" && validationValue !== undefined) {
-                    this.validateEqualTo(value, validationValue);
+                    if (!this.validateEqualTo(value, validationValue)) {
+                        hasErrors = true;
+                    }
                 }
 
             }, this);
-        }
 
-        // call onChange of parent
-        this.props.onChange(event);
+            // call onChange of parent
+            this.props.callback(event, hasErrors);
+        }
     };
 
     render() {
