@@ -1,5 +1,5 @@
 import React from 'react'
-import {Container, Divider, Dropdown, Grid, Header, Segment, Table} from "semantic-ui-react";
+import {Container, Dropdown, Grid, Header, Segment, Table} from "semantic-ui-react";
 import TableItemAll from "../presentationComponents/TableItemAll";
 import {getTransactions} from "../api";
 
@@ -56,17 +56,18 @@ class AllTransactions extends React.Component {
                     </Segment>
                     <Segment>
                         <Header as='h3'>Filter</Header>
-                        <Grid columns={2} relaxed>
+                        <Grid stackable columns={2} relaxed>
                             <Grid.Column>
                                 <Segment basic>
+                                    <label>Select a year</label>
                                     <Dropdown placeholder='Select Year' fluid search selection
                                               options={this.yearOptions} defaultValue={this.state.year}
                                               onChange={this.handleYearChanged}/>
                                 </Segment>
                             </Grid.Column>
-                            <Divider vertical/>
                             <Grid.Column>
                                 <Segment basic>
+                                    <label>Select a month</label>
                                     <Dropdown placeholder='Select Month' fluid search selection
                                               options={this.monthOptions} defaultValue={this.state.month}
                                               onChange={this.handleMonthChanged}/>
@@ -75,7 +76,7 @@ class AllTransactions extends React.Component {
                         </Grid>
 
 
-                        <Table basic='very'>
+                        <Table basic='very' unstackable>
                             <Table.Header>
                                 <Table.Row>
                                     <Table.HeaderCell>Date</Table.HeaderCell>

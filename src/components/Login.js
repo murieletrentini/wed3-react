@@ -2,7 +2,7 @@
 
 import React from "react";
 import {Redirect} from "react-router-dom";
-import {Button, Form, Segment, Menu, Message, Grid, Container} from "semantic-ui-react";
+import {Button, Form, Segment, Menu, Message, Container, Header} from "semantic-ui-react";
 import ValidatedFormField from "./ValidatedFormField";
 
 export type Props = {
@@ -31,14 +31,14 @@ class Login extends React.Component {
         hasValidationErrors: true,
     };
 
-    handleLoginCallback = (event: Event, hasErrors : Boolean) => {
+    handleLoginCallback = (event: Event, hasErrors: Boolean) => {
         if (event.target instanceof HTMLInputElement) {
             this.handleValidationComponents(event, hasErrors);
             this.setState({login: event.target.value});
         }
     };
 
-    handlePasswordCallback = (event: Event, hasErrors : Boolean) => {
+    handlePasswordCallback = (event: Event, hasErrors: Boolean) => {
         if (event.target instanceof HTMLInputElement) {
             this.handleValidationComponents(event, hasErrors);
             this.setState({password: event.target.value});
@@ -62,7 +62,7 @@ class Login extends React.Component {
         this.setState({redirectToRegister: true});
     };
 
-    handleValidationComponents = (event: Event, elementHasErrors : Boolean) => {
+    handleValidationComponents = (event: Event, elementHasErrors: Boolean) => {
         let validationErrorMap = this.state.validationErrorMap;
         validationErrorMap.set(event.target.placeholder, elementHasErrors);
 
@@ -81,9 +81,9 @@ class Login extends React.Component {
 
 
     render() {
-        const { redirectToReferrer, redirectToRegister, error } = this.state;
-        const { from } = this.props.location.state || {
-            from: { pathname: "/dashboard" }
+        const {redirectToReferrer, redirectToRegister, error} = this.state;
+        const {from} = this.props.location.state || {
+            from: {pathname: "/dashboard"}
         };
 
         if (redirectToReferrer) {
@@ -91,7 +91,7 @@ class Login extends React.Component {
         }
 
         if (redirectToRegister) {
-            return <Redirect to="/signup" />
+            return <Redirect to="/signup"/>
         }
 
         this.basicValidationConfig = {
@@ -108,38 +108,35 @@ class Login extends React.Component {
                     </Menu.Item>
                 </Menu>
                 <Container>
-                    <Form onSubmit={this.handleSubmit}>
-                        <Segment>
-
-                            <Grid container>
-
-                                <Grid.Column>
-                                    {error &&
-                                    <Message negative>
-                                        <Message.Header>Invalid credentials entered</Message.Header>
-                                        <p>Please try again</p>
-                                    </Message>
-                                    }
-
-                                    <ValidatedFormField placeholder="Login"
-                                                        icon="user"
-                                                        type="text"
-                                                        value={this.state.login}
-                                                        validations={this.basicValidationConfig}
-                                                        callback={this.handleLoginCallback}/>
-
-                                    <ValidatedFormField placeholder="Password"
-                                                        icon="lock"
-                                                        type="password"
-                                                        value={this.state.password}
-                                                        validations={this.basicValidationConfig}
-                                                        callback={this.handlePasswordCallback}/>
-
-                                    <Button size='large' content='Login' color='linkedin' disabled={this.state.hasValidationErrors}/>
-                                </Grid.Column>
-                            </Grid>
+                    <Segment.Group>
+                        <Segment color="blue">
+                            <Header>Welcome to the Finance Portal!</Header>
                         </Segment>
-                    </Form>
+                        <Segment>
+                            <Form onSubmit={this.handleSubmit}>
+                                {error &&
+                                <Message negative>
+                                    <Message.Header>Invalid credentials entered</Message.Header>
+                                    <p>Please try again</p>
+                                </Message>
+                                }
+                                <ValidatedFormField placeholder="Login"
+                                                    icon="user"
+                                                    type="text"
+                                                    value={this.state.login}
+                                                    validations={this.basicValidationConfig}
+                                                    callback={this.handleLoginCallback}/>
+                                <ValidatedFormField placeholder="Password"
+                                                    icon="lock"
+                                                    type="password"
+                                                    value={this.state.password}
+                                                    validations={this.basicValidationConfig}
+                                                    callback={this.handlePasswordCallback}/>
+                                <Button size='large' content='Login' color='linkedin'
+                                        disabled={this.state.hasValidationErrors}/>
+                            </Form>
+                        </Segment>
+                    </Segment.Group>
                 </Container>
             </div>
         );

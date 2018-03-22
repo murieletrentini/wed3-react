@@ -1,5 +1,5 @@
 import React from 'react'
-import {Container} from "semantic-ui-react";
+import {Container, Grid} from "semantic-ui-react";
 import NewPayment from "./NewPayment";
 import LatestTransactions from "./LatestTransactions";
 import {getTransactions} from "../api";
@@ -33,8 +33,14 @@ class Dashboard extends React.Component {
     render() {
         return (
             <Container>
-                <NewPayment updateSibling={this.updateSibling} {...this.props} />
-                <LatestTransactions transactions={this.state.transactions}/>
+                <Grid stackable columns={2}>
+                    <Grid.Column>
+                        <NewPayment updateSibling={this.updateSibling} {...this.props} />
+                    </Grid.Column>
+                    <Grid.Column>
+                        <LatestTransactions transactions={this.state.transactions}/>
+                    </Grid.Column>
+                </Grid>
             </Container>)
     }
 }

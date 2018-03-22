@@ -7,12 +7,12 @@ class LatestTransactions extends React.Component {
 
     render() {
         return (
-            <Segment.Group compact>
+            <Segment.Group>
                 <Segment color="blue">
                     <Header>Latest Transactions</Header>
                 </Segment>
                 <Segment>
-                    <Table basic='very'>
+                    <Table basic='very' unstackable>
                         <Table.Header>
                             <Table.Row>
                                 <Table.HeaderCell>Source</Table.HeaderCell>
