@@ -1,10 +1,11 @@
 import React from 'react'
 import {Button, Form, Input, Segment, Header} from "semantic-ui-react";
 import {getAccount, transfer} from "../api";
+import ValidatedFormField from "./ValidatedFormField";
 
 class NewPayment extends React.Component {
     state = {
-        accountNrPrompt:'Please specify the target account number.'
+        accountNrPrompt: 'Please specify the target account number.'
     };
 
     handleSubmit = (event: Event) => {
@@ -24,9 +25,11 @@ class NewPayment extends React.Component {
         if (event.target instanceof HTMLInputElement) {
             this.setState({targetNr: event.target.value});
             getAccount(event.target.value, this.props.token).then(result => {
-                this.setState({ accountNrPrompt:result.owner.firstname + " " + result.owner.lastname});
+                this.setState({accountNrPrompt: result.owner.firstname + " " + result.owner.lastname});
             })
-                .catch(error => {this.setState({error:error, accountNrPrompt: 'Unknown account nr specified'});});
+                .catch(error => {
+                    this.setState({error: error, accountNrPrompt: 'Unknown account nr specified'});
+                });
         }
     };
 
@@ -39,12 +42,15 @@ class NewPayment extends React.Component {
 
 
     handleAmountChange = (event: Event) => {
-        if (event.target instanceof HTMLInputElement) {
             this.setState({amount: event.target.value});
-        }
     };
 
     render() {
+        this.basicValidationConfig = {
+            required: true,
+            minAmount: 0.05
+        };
+        //TODO: disable button if errors
         return (
             <Segment.Group compact>
                 <Segment color="blue">
@@ -53,20 +59,29 @@ class NewPayment extends React.Component {
                 <Segment>
                     <Form onSubmit={this.handleSubmit}>
                         <Form.Field>
+                            <label>From</label>
                             <Input
                                 placeholder="accountNr"
                                 value={this.props.user.accountNr}
                                 onChange={this.handleSourceChange}
                                 disabled/>
+                        </Form.Field>
+                        <Form.Field>
+                            <label>To</label>
                             <Input
                                 onChange={this.handleTargetChange}
                                 placeholder="Target Account Number"
                                 value={this.state.targetNr}/>
                             <span>{this.state.accountNrPrompt}</span>
-                            <Input
-                                onChange={this.handleAmountChange}
-                                placeholder="Amount in CHF"
-                                value={this.state.amount}/>
+                        </Form.Field>
+                        <Form.Field>
+                            <label>Amount [CHF]</label>
+                            <ValidatedFormField placeholder="Amount in CHF"
+                                                icon="money"
+                                                type="text"
+                                                validations={this.basicValidationConfig}
+                                                value={this.state.amount}
+                                                callback={this.handleAmountChange}/>
                         </Form.Field>
                         <Button size='large' content='Pay' color='linkedin'/>
                     </Form>

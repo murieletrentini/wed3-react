@@ -29,7 +29,7 @@ class ValidatedFormField extends React.Component {
     };
 
     validateEqualTo = (value: any, otherElement: any) => {
-        var otherValue = otherElement.value;
+        let otherValue = otherElement.value;
 
         if (value !== otherValue) {
             let message = this.props.placeholder + " is not equal to " + otherElement.placeholder;
@@ -39,6 +39,18 @@ class ValidatedFormField extends React.Component {
             return true;
         }
     };
+
+    minAmount = (value: any, minValue: any) => {
+
+        if (value < minValue) {
+            let message = this.props.placeholder + " is not higher than " + minValue;
+            this.setState(state => ({messages: state.messages.concat([message])}));
+            return false;
+        } else {
+            return true;
+        }
+    };
+
 
     validate = (event: Event) => {
         const {validations} = this.props;
@@ -73,6 +85,12 @@ class ValidatedFormField extends React.Component {
                     }
                 }
 
+                if (key === "minAmount" && validationValue !== undefined) {
+                    if (!this.minAmount(value, validationValue)) {
+                        hasErrors = true;
+                    }
+                }
+
             }, this);
 
             // call onChange of parent
@@ -85,7 +103,6 @@ class ValidatedFormField extends React.Component {
         const {...props} = this.props;
 
         return (
-            <div>
                 <Form.Field>
                     <Input {...props} onChange={this.validate} iconPosition="left" />
 
@@ -94,7 +111,6 @@ class ValidatedFormField extends React.Component {
                     }
 
                 </Form.Field>
-            </div>
         );
     }
 }
