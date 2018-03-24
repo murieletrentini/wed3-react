@@ -25,7 +25,12 @@ class Signup extends React.Component {
                 placeholder: "Confirm Password"
             },
             error: null,
-            validationErrorMap: new Map(),
+            validationErrorMap: new Map([
+                ["Firstname",   [true]],
+                ["Lastname", [true]],
+                ["Username", [true]],
+                ["Password", [true]],
+                ["Confirm Password", [true]]]),
             hasValidationErrors: true,
             redirectToReferrer: false
         };

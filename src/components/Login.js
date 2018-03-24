@@ -29,11 +29,12 @@ class Login extends React.Component {
             error: undefined,
             redirectToReferrer: false,
             redirectToRegister: false,
-            validationErrorMap: new Map(),
+            validationErrorMap: new Map([
+                ["Login",   [true]],
+                ["Password", [true]]]),
             hasValidationErrors: true,
         };
     }
-
 
     handleLoginCallback = (event: Event, hasErrors: Boolean) => {
         if (event.target instanceof HTMLInputElement) {
