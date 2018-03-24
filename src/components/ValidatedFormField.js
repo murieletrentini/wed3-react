@@ -106,12 +106,14 @@ class ValidatedFormField extends React.Component {
 
     render() {
         const { messages} = this.state;
-        const {...props} = this.props;
+
+        const divProps = Object.assign({}, this.props);
+        delete divProps.callback;
 
         return (
                 <Form.Field>
                     <label>{this.props.placeholder}</label>
-                    <Input {...props} onChange={this.validate} iconPosition="left" />
+                    <Input {...divProps} onChange={this.validate} iconPosition="left" />
 
                     {messages.length > 0 &&
                      <Label pointing color='red' basic>{messages.join(" / ")}</Label>

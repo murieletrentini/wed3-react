@@ -24,7 +24,7 @@ class LatestTransactions extends React.Component {
 
                         <Table.Body>
                             {this.props.transactions.map(
-                                transaction => <TableItemLatest {...transaction}/>
+                                transaction => <TableItemLatest {...transaction} key={Math.random()}/>
                             )}
                         </Table.Body>
                     </Table>

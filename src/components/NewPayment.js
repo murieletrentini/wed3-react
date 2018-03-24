@@ -1,37 +1,43 @@
 import React from 'react'
-import {Button, Form, Input, Segment, Header} from "semantic-ui-react";
+import {Button, Form, Input, Segment, Header, Message} from "semantic-ui-react";
 import {getAccount, transfer, getAccountDetails} from "../api";
 import ValidatedFormField from "./ValidatedFormField";
+
+const defaultPromptText = 'Please specify the target account number.'
 
 class NewPayment extends React.Component {
 
     constructor(props: any) {
         super(props);
+
         this.state = {
-            targetNr:"",
-            fromAccountNr: "",
-            fromAccountAmount: "",
-            accountNrPrompt: 'Please specify the target account number.'
+            toAccountNr:'',
+            fromAccountNr: '',
+            fromAccountAmount: '',
+            amount: '',
+            accountNrPrompt: defaultPromptText,
+            success: false,
+            error: null,
         };
     }
 
     handleSubmit = (event: Event) => {
         event.preventDefault();
-        const {targetNr, amount} = this.state;
-
-        transfer(targetNr, amount, this.props.token)
+        const {toAccountNr, amount} = this.state;
+        transfer(toAccountNr, amount, this.props.token)
             .then(result => {
                 console.log("transfer ", result);
-                this.setState({targetNr: '', amount: 0});
+                this.setState({toAccountNr: '', amount: 0});
                 this.props.onNewTransaction();
                 this.handleRefreshAccountDetails();
+                this.setState({success: true, accountNrPrompt: defaultPromptText});
             })
             .catch(error => this.setState({error}));
     };
 
     handleTargetChange = (event: Event) => {
         if (event.target instanceof HTMLInputElement) {
-            this.setState({targetNr: event.target.value});
+            this.setState({toAccountNr: event.target.value});
 
             if (event.target.value !== "") {
                 getAccount(event.target.value, this.props.token).then(result => {
@@ -56,8 +62,12 @@ class NewPayment extends React.Component {
         this.handleRefreshAccountDetails();
     }
 
-    handleAmountChange = (event: Event) => {
-            this.setState({amount: event.target.value});
+    handleAmountChange = (event: Event, hasErrors: Boolean) => {
+        this.setState({amount: event.target.value});
+    };
+
+    handleStartOverClicked = (event: Event) => {
+        this.setState({success: false});
     };
 
     render() {
@@ -72,34 +82,43 @@ class NewPayment extends React.Component {
                     <Header>New Payment</Header>
                 </Segment>
                 <Segment>
-                    <Form onSubmit={this.handleSubmit}>
-                        <Form.Field>
-                            <label>From</label>
-                            <Input
-                                placeholder="accountNr"
-                                value={this.state.fromAccountNr + " [" + this.state.fromAccountAmount + " CHF] " }
-                                onChange={this.handleSourceChange}
-                                disabled/>
-                        </Form.Field>
-                        <Form.Field>
-                            <label>To</label>
-                            <Input
-                                onChange={this.handleTargetChange}
-                                placeholder="Target Account Number"
-                                type="number"
-                                value={this.state.targetNr}/>
-                            <span>{this.state.accountNrPrompt}</span>
-                        </Form.Field>
-                        <Form.Field>
-                            <ValidatedFormField placeholder="Amount in CHF"
-                                                icon="money"
-                                                type="number"
-                                                validations={this.basicValidationConfig}
-                                                value={this.state.amount}
-                                                callback={this.handleAmountChange}/>
-                        </Form.Field>
-                        <Button size='large' content='Pay' color='linkedin'/>
-                    </Form>
+                    {this.state.success ? (
+                        <div>
+                            <p>Transaction to {this.state.toAccountNr} succeeded!</p>
+                            <p>New balance {this.state.fromAccountAmount} CHF</p>
+
+                            <Button onClick={this.handleStartOverClicked} size='large' content='Start over' color='linkedin'/>
+                        </div>
+                    ) : (
+                        <Form onSubmit={this.handleSubmit}>
+                            <Form.Field>
+                                <label>From</label>
+                                <Input
+                                    placeholder="accountNr"
+                                    value={this.state.fromAccountNr + " [" + this.state.fromAccountAmount + " CHF] " }
+                                    disabled
+                                    readOnly/>
+                            </Form.Field>
+                            <Form.Field>
+                                <label>To</label>
+                                <Input
+                                    onChange={this.handleTargetChange}
+                                    placeholder="Target Account Number"
+                                    type="number"
+                                    value={this.state.toAccountNr}/>
+                                <Message content={this.state.accountNrPrompt} info />
+                            </Form.Field>
+                            <Form.Field>
+                                <ValidatedFormField placeholder="Amount in CHF"
+                                                    icon="money"
+                                                    type="number"
+                                                    validations={this.basicValidationConfig}
+                                                    value={this.state.amount}
+                                                    callback={this.handleAmountChange}/>
+                            </Form.Field>
+                            <Button size='large' content='Pay' color='linkedin'/>
+                        </Form>
+                    )}
                 </Segment>
             </Segment.Group>
         )

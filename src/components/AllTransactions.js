@@ -92,9 +92,9 @@ class AllTransactions extends React.Component {
                             </Table.Header>
 
                             <Table.Body>
-                                {this.state.transactions.map(
-                                    transaction => <TableItemAll {...transaction}/>
-                                )}
+                                {this.state.transactions.map((transaction) => {
+                                    return <TableItemAll {...transaction} key={Math.random()} />;
+                                })}
                             </Table.Body>
                         </Table>
                     </Segment>
