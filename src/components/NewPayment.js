@@ -27,7 +27,6 @@ class NewPayment extends React.Component {
         transfer(toAccountNr, amount, this.props.token)
             .then(result => {
                 console.log("transfer ", result);
-                this.setState({toAccountNr: '', amount: 0});
                 this.props.onNewTransaction();
                 this.handleRefreshAccountDetails();
                 this.setState({success: true, accountNrPrompt: defaultPromptText});
@@ -67,7 +66,7 @@ class NewPayment extends React.Component {
     };
 
     handleStartOverClicked = (event: Event) => {
-        this.setState({success: false});
+        this.setState({success: false, toAccountNr: '', amount: ''});
     };
 
     render() {

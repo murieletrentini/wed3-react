@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import {Redirect} from "react-router-dom";
+import {Redirect, Link} from "react-router-dom";
 
 import {Button, Form, Segment, Menu, Message, Container, Header} from "semantic-ui-react";
 import ValidatedFormField from "./ValidatedFormField";
@@ -128,6 +128,9 @@ class Signup extends React.Component {
             <div>
                 <Menu>
                     <Menu.Item header>Bank of Rapperswil</Menu.Item>
+                    <Menu.Item>
+                        <Link to="/welcome">Back</Link>
+                    </Menu.Item>
                     <Menu.Item position='right'>
                         <Button size='large' content='Register' color='linkedin' onClick={this.handleSignupClicked}/>
                     </Menu.Item>
