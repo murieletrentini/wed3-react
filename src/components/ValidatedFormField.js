@@ -4,9 +4,13 @@ import {Form, Label, Input} from "semantic-ui-react";
 
 class ValidatedFormField extends React.Component {
 
-    state = {
-        messages: [],
-    };
+    constructor() {
+        super();
+        this.state = {
+            messages: [],
+        };
+    }
+
 
     validateIsEmpty = (value : any) => {
         if (value === "") {
@@ -98,12 +102,15 @@ class ValidatedFormField extends React.Component {
         }
     };
 
+
+
     render() {
         const { messages} = this.state;
         const {...props} = this.props;
 
         return (
                 <Form.Field>
+                    <label>{this.props.placeholder}</label>
                     <Input {...props} onChange={this.validate} iconPosition="left" />
 
                     {messages.length > 0 &&

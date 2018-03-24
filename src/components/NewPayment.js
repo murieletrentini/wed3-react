@@ -1,12 +1,19 @@
 import React from 'react'
 import {Button, Form, Input, Segment, Header} from "semantic-ui-react";
-import {getAccount, transfer} from "../api";
+import {getAccount, transfer, getAccountDetails} from "../api";
 import ValidatedFormField from "./ValidatedFormField";
 
 class NewPayment extends React.Component {
-    state = {
-        accountNrPrompt: 'Please specify the target account number.'
-    };
+
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            targetNr:"",
+            fromAccountNr: "",
+            fromAccountAmount: "",
+            accountNrPrompt: 'Please specify the target account number.'
+        };
+    }
 
     handleSubmit = (event: Event) => {
         event.preventDefault();
@@ -15,8 +22,9 @@ class NewPayment extends React.Component {
         transfer(targetNr, amount, this.props.token)
             .then(result => {
                 console.log("transfer ", result);
-                this.props.updateSibling();
-                this.setState({targetNr: 'Target Account Number', amount: 0});
+                this.setState({targetNr: '', amount: 0});
+                this.props.onNewTransaction();
+                this.handleRefreshAccountDetails();
             })
             .catch(error => this.setState({error}));
     };
@@ -24,22 +32,29 @@ class NewPayment extends React.Component {
     handleTargetChange = (event: Event) => {
         if (event.target instanceof HTMLInputElement) {
             this.setState({targetNr: event.target.value});
-            getAccount(event.target.value, this.props.token).then(result => {
-                this.setState({accountNrPrompt: result.owner.firstname + " " + result.owner.lastname});
-            })
+
+            if (event.target.value !== "") {
+                getAccount(event.target.value, this.props.token).then(result => {
+                    this.setState({accountNrPrompt: result.owner.firstname + " " + result.owner.lastname});
+                })
                 .catch(error => {
                     this.setState({error: error, accountNrPrompt: 'Unknown account nr specified'});
                 });
+            }
         }
     };
 
-    //TODO: without this, react warns about mixing uncontrolled and controlled components... but this function will never be called, because input is disabled...
-    handleSourceChange = (event: Event) => {
-        if (event.target instanceof HTMLInputElement) {
-            this.setState({sourceNr: event.target.value});
-        }
+    handleRefreshAccountDetails = () => {
+        getAccountDetails(this.props.token).then(a =>
+                this.setState({fromAccountNr: a.accountNr, fromAccountAmount: a.amount}))
+            .catch(error => {
+                this.setState({error: error});
+            });
     };
 
+    componentDidMount() {
+        this.handleRefreshAccountDetails();
+    }
 
     handleAmountChange = (event: Event) => {
             this.setState({amount: event.target.value});
@@ -52,7 +67,7 @@ class NewPayment extends React.Component {
         };
         //TODO: disable button if errors
         return (
-            <Segment.Group compact>
+            <Segment.Group>
                 <Segment color="blue">
                     <Header>New Payment</Header>
                 </Segment>
@@ -62,7 +77,7 @@ class NewPayment extends React.Component {
                             <label>From</label>
                             <Input
                                 placeholder="accountNr"
-                                value={this.props.user.accountNr}
+                                value={this.state.fromAccountNr + " [" + this.state.fromAccountAmount + " CHF] " }
                                 onChange={this.handleSourceChange}
                                 disabled/>
                         </Form.Field>
@@ -71,14 +86,14 @@ class NewPayment extends React.Component {
                             <Input
                                 onChange={this.handleTargetChange}
                                 placeholder="Target Account Number"
+                                type="number"
                                 value={this.state.targetNr}/>
                             <span>{this.state.accountNrPrompt}</span>
                         </Form.Field>
                         <Form.Field>
-                            <label>Amount [CHF]</label>
                             <ValidatedFormField placeholder="Amount in CHF"
                                                 icon="money"
-                                                type="text"
+                                                type="number"
                                                 validations={this.basicValidationConfig}
                                                 value={this.state.amount}
                                                 callback={this.handleAmountChange}/>

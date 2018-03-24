@@ -4,23 +4,22 @@ import NewPayment from "./NewPayment";
 import LatestTransactions from "./LatestTransactions";
 import {getTransactions} from "../api";
 
-class Dashboard extends React.Component {
-    state = {
-        transactions: []
-    };
 
-    componentDidMount() {
-        console.log(this.props);
-        getTransactions(this.props.token)
-            .then(result => {
-                console.log("transactions ", result.result);
-                this.setState({transactions: result.result});
-            })
-            .catch(error => this.setState({error}));
+class Dashboard extends React.Component {
+
+
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            transactions: []
+        };
     }
 
-    //TODO: does not work yet
-    updateSibling = () => {
+    componentDidMount() {
+        this.loadTransactions();
+    }
+
+    loadTransactions = () => {
         console.log("fetching transactions");
         getTransactions(this.props.token)
             .then(result => {
@@ -33,13 +32,15 @@ class Dashboard extends React.Component {
     render() {
         return (
             <Container>
-                <Grid stackable columns={2}>
-                    <Grid.Column>
-                        <NewPayment updateSibling={this.updateSibling} {...this.props} />
-                    </Grid.Column>
-                    <Grid.Column>
-                        <LatestTransactions transactions={this.state.transactions}/>
-                    </Grid.Column>
+                <Grid stackable>
+                    <Grid.Row columns={2}>
+                        <Grid.Column width={5}>
+                            <NewPayment onNewTransaction={this.loadTransactions} {...this.props} />
+                        </Grid.Column>
+                        <Grid.Column width={11}>
+                            <LatestTransactions transactions={this.state.transactions}/>
+                        </Grid.Column>
+                    </Grid.Row>
                 </Grid>
             </Container>)
     }

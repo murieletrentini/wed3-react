@@ -3,30 +3,34 @@
 import React from "react";
 import {Redirect} from "react-router-dom";
 
-import {Button, Form, Segment, Menu, Message, Grid, Container, Header} from "semantic-ui-react";
+import {Button, Form, Segment, Menu, Message, Container, Header} from "semantic-ui-react";
 import ValidatedFormField from "./ValidatedFormField";
 import {signup} from "../api";
 
 
 class Signup extends React.Component {
 
-    state = {
-        login: "",
-        firstname: "",
-        lastname: "",
-        password: {
-            value: "",
-            placeholder: "Password"
-        },
-        confirmedPassword: {
-            value: "",
-            placeholder: "Confirm Password"
-        },
-        error: null,
-        validationErrorMap: new Map(),
-        hasValidationErrors: true,
-        redirectToReferrer: false
-    };
+    constructor() {
+        super();
+        this.state = {
+            login: "",
+            firstname: "",
+            lastname: "",
+            password: {
+                value: "",
+                placeholder: "Password"
+            },
+            confirmedPassword: {
+                value: "",
+                placeholder: "Confirm Password"
+            },
+            error: null,
+            validationErrorMap: new Map(),
+            hasValidationErrors: true,
+            redirectToReferrer: false
+        };
+    }
+
 
     handleLoginCallback = (event: Event, hasErrors: Boolean) => {
         if (event.target instanceof HTMLInputElement) {

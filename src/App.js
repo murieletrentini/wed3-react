@@ -17,14 +17,7 @@ import PrivateRoute from "./components/PrivateRoute";
 
 import * as api from "./api";
 
-import type {User} from "./api";
 import {Icon, Menu} from "semantic-ui-react";
-
-type State = {
-    isAuthenticated: boolean,
-    token: ?string,
-    user: ?User
-};
 
 class App extends React.Component {
 

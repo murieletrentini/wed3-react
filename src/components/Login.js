@@ -21,15 +21,19 @@ export type Props = {
 
 class Login extends React.Component {
 
-    state = {
-        login: "",
-        password: "",
-        error: undefined,
-        redirectToReferrer: false,
-        redirectToRegister: false,
-        validationErrorMap: new Map(),
-        hasValidationErrors: true,
-    };
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            login: "",
+            password: "",
+            error: undefined,
+            redirectToReferrer: false,
+            redirectToRegister: false,
+            validationErrorMap: new Map(),
+            hasValidationErrors: true,
+        };
+    }
+
 
     handleLoginCallback = (event: Event, hasErrors: Boolean) => {
         if (event.target instanceof HTMLInputElement) {
@@ -114,26 +118,31 @@ class Login extends React.Component {
                         </Segment>
                         <Segment>
                             <Form onSubmit={this.handleSubmit}>
+
                                 {error &&
                                 <Message negative>
                                     <Message.Header>Invalid credentials entered</Message.Header>
                                     <p>Please try again</p>
                                 </Message>
                                 }
+
                                 <ValidatedFormField placeholder="Login"
                                                     icon="user"
                                                     type="text"
                                                     value={this.state.login}
                                                     validations={this.basicValidationConfig}
                                                     callback={this.handleLoginCallback}/>
+
                                 <ValidatedFormField placeholder="Password"
                                                     icon="lock"
                                                     type="password"
                                                     value={this.state.password}
                                                     validations={this.basicValidationConfig}
                                                     callback={this.handlePasswordCallback}/>
+
                                 <Button size='large' content='Login' color='linkedin'
                                         disabled={this.state.hasValidationErrors}/>
+
                             </Form>
                         </Segment>
                     </Segment.Group>

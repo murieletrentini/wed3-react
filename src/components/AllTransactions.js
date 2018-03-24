@@ -6,11 +6,14 @@ import {getTransactions} from "../api";
 
 class AllTransactions extends React.Component {
 
-    state = {
-        transactions: [],
-        year: new Date().getFullYear(),
-        month: new Date().getMonth()
-    };
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            transactions: [],
+            year: new Date().getFullYear(),
+            month: new Date().getMonth()
+        };
+    }
 
     monthOptions = [{key: 0, value: 0, text: 'January'}, {key: 1, value: 1, text: 'February'},
         {key: 2, value: 2, text: 'March'}, {key: 3, value: 3, text: 'April'},
@@ -26,6 +29,7 @@ class AllTransactions extends React.Component {
     handleYearChanged = (event: SyntheticEvent, data: object) => {
         this.updateTransactions({year: data.value, month: this.state.month})
     };
+
     handleMonthChanged = (event: SyntheticEvent, data: object) => {
         this.updateTransactions({year: this.state.year, month: data.value})
     };
