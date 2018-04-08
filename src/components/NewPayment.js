@@ -18,6 +18,9 @@ class NewPayment extends React.Component {
             accountNrPrompt: defaultPromptText,
             success: false,
             error: null,
+            validationErrorMap: new Map([
+                ["Amount in CHF", [true]]]),
+            hasValidationErrors: true,
         };
     }
 
@@ -62,12 +65,36 @@ class NewPayment extends React.Component {
     }
 
     handleAmountChange = (event: Event, hasErrors: Boolean) => {
+        this.handleValidationComponents(event, hasErrors);
         this.setState({amount: event.target.value});
     };
 
     handleStartOverClicked = (event: Event) => {
         this.setState({success: false, toAccountNr: '', amount: ''});
     };
+
+    handleValidationComponents = (event: Event, elementHasErrors: Boolean) => {
+        let validationErrorMap = this.state.validationErrorMap;
+        validationErrorMap.set(event.target.placeholder, elementHasErrors);
+
+        console.log(event.target.placeholder);
+        console.log(elementHasErrors);
+
+        this.setState({validationErrorMap: validationErrorMap}, () => {
+
+                let hasErrors = false;
+            this.state.validationErrorMap.forEach((value, key, mapObj) => {
+                if (value) {
+                    hasErrors = value;
+                }
+            });
+
+            console.log(hasErrors);
+
+            this.setState({hasValidationErrors: hasErrors});
+        });
+    };
+
 
     render() {
         this.basicValidationConfig = {
@@ -115,7 +142,10 @@ class NewPayment extends React.Component {
                                                     value={this.state.amount}
                                                     callback={this.handleAmountChange}/>
                             </Form.Field>
-                            <Button size='large' content='Pay' color='linkedin'/>
+
+                            <Button size='large' content='Pay' color='linkedin'
+                                    disabled={this.state.hasValidationErrors} />
+
                         </Form>
                     )}
                 </Segment>
