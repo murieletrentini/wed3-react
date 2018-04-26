@@ -4,6 +4,7 @@ import React from "react";
 import {
     BrowserRouter as Router,
     Route,
+    Switch,
     withRouter
 } from "react-router-dom";
 import {Redirect} from 'react-router'
@@ -105,54 +106,44 @@ class App extends React.Component {
             <Router>
                 <div>
                     <MenuBar/>
-                    <Route
-                        exact
-                        path="/"
-                        render={props => (
-                            (isAuthenticated && user) ? <Redirect to="/dashboard"/> :
-                                <Redirect to="/welcome"/>
-                        )}
-                    />
-                    <Route
-                        path="/**"
-                        render={props => (
-                            (isAuthenticated && user) ? <Redirect to="/dashboard"/> :
-                                <Redirect to="/welcome"/>
-                        )}
-                    />
-                    <Route
-                        exact
-                        path="/welcome"
-                        render={props => (
-                            <Login {...props} authenticate={this.authenticate}/>
-                        )}
-                    />
-                    <Route exact
-                           path="/signup"
-                           render={props => (
-                               <Signup {...props} authenticate={this.authenticate}/>
-                           )}
-                    />
-                    {/*
-            The following are protected routes that are only available for logged-in users. We also pass the user and token so 
-            these components can do API calls. PrivateRoute is not part of react-router but our own implementation.
-          */}
-                    <PrivateRoute
-                        exact
-                        path="/dashboard"
-                        isAuthenticated={isAuthenticated}
-                        user={user}
-                        token={token}
-                        component={Dashboard}
-                    />
-                    {/*TODO: change path of transaction to /dashboard/transaction */}
-                    <PrivateRoute
-                        path="/dashboard/transactions"
-                        isAuthenticated={isAuthenticated}
-                        token={token}
-                        user={user}
-                        component={AllTransactions}
-                    />
+                    <Switch>
+                        <Route
+                            exact
+                            path="/welcome"
+                            render={props => (
+                                <Login {...props} authenticate={this.authenticate}/>
+                            )}
+                        />
+                        <Route exact
+                               path="/signup"
+                               render={props => (
+                                   <Signup {...props} authenticate={this.authenticate}/>
+                               )}
+                        />
+                        <PrivateRoute
+                            exact
+                            path="/dashboard"
+                            isAuthenticated={isAuthenticated}
+                            user={user}
+                            token={token}
+                            component={Dashboard}
+                        />
+                        <PrivateRoute
+                            path="/dashboard/transactions"
+                            isAuthenticated={isAuthenticated}
+                            token={token}
+                            user={user}
+                            component={AllTransactions}
+                        />
+                        <Route
+                            exact
+                            path="*"
+                            render={props => (
+                                (isAuthenticated && user) ? <Redirect to="/dashboard"/> :
+                                    <Redirect to="/welcome"/>
+                            )}
+                        />
+                    </Switch>
                 </div>
             </Router>
         );
