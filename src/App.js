@@ -114,6 +114,13 @@ class App extends React.Component {
                         )}
                     />
                     <Route
+                        path="/**"
+                        render={props => (
+                            (isAuthenticated && user) ? <Redirect to="/dashboard"/> :
+                                <Redirect to="/welcome"/>
+                        )}
+                    />
+                    <Route
                         exact
                         path="/welcome"
                         render={props => (
