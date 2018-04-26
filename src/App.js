@@ -71,7 +71,7 @@ class App extends React.Component {
         const MenuBar = withRouter(({history, location: {pathname}}) => {
             if (isAuthenticated && user) {
                 return (
-                    <Menu>
+                    <Menu stackable>
                         <Menu.Item header>Account {user.accountNr}</Menu.Item>
                         <Menu.Item name='dashboard' onClick={event => {
                             event.preventDefault();
