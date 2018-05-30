@@ -20,10 +20,8 @@ class Dashboard extends React.Component {
     }
 
     loadTransactions = () => {
-        console.log("fetching transactions");
         getTransactions(this.props.token)
             .then(result => {
-                console.log("transactions ", result.result);
                 this.setState({transactions: result.result});
             })
             .catch(error => this.setState({error}));

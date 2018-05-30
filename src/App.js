@@ -80,7 +80,6 @@ class App extends React.Component {
                         }}>
                             Dashboard
                         </Menu.Item>
-                        {/*TODO: change path of transaction to /dashboard/transaction */}
                         <Menu.Item name='transactions' onClick={event => {
                             event.preventDefault();
                             history.push("/dashboard/transactions");

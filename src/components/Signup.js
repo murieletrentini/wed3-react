@@ -25,6 +25,7 @@ class Signup extends React.Component {
                 placeholder: "Confirm Password"
             },
             error: null,
+            unequalPasswords: null,
             validationErrorMap: new Map([
                 ["Firstname",   [true]],
                 ["Lastname", [true]],
@@ -64,7 +65,7 @@ class Signup extends React.Component {
             password.value = event.target.value;
 
             this.handleValidationComponents(event, hasErrors);
-            this.setState({password: password});
+            this.setState({password: password, unequalPasswords: null});
         }
     };
 
@@ -75,7 +76,7 @@ class Signup extends React.Component {
 
             this.handleValidationComponents(event, hasErrors);
 
-            this.setState({confirmedPassword: confirmedPassword});
+            this.setState({confirmedPassword: confirmedPassword, unequalPasswords: null});
         }
     };
 
@@ -88,7 +89,7 @@ class Signup extends React.Component {
             let hasErrors = false;
             this.state.validationErrorMap.forEach((value, key, mapObj) => {
                 if (value) {
-                    hasErrors = value;
+                    hasErrors = true;
                 }
             });
 
@@ -96,24 +97,27 @@ class Signup extends React.Component {
         });
     };
 
-    //TODO: gemäss Spezifikation "User wird auf dem Server angelegt und automatisch eingelogged."
     handleSubmit = (event: Event) => {
         event.preventDefault();
 
-        const {login, firstname, lastname, password} = this.state;
-        signup(login, firstname, lastname, password.value)
-            .then(this.props.authenticate(login, password.value, error => {
-                if (error) {
-                    this.setState({error});
-                } else {
-                    this.setState({redirectToReferrer: true, error: null});
-                }
-            }))
-            .catch(error => this.setState({error}));
+        const {login, firstname, lastname, password, confirmedPassword} = this.state;
+        if (password.value !== confirmedPassword.value){
+            this.setState({unequalPasswords: true});
+        } else {
+            signup(login, firstname, lastname, password.value)
+                .then(this.props.authenticate(login, password.value, error => {
+                    if (error) {
+                        this.setState({error});
+                    } else {
+                        this.setState({redirectToReferrer: true, error: null});
+                    }
+                }))
+                .catch(error => this.setState({error}));
+        }
     };
 
     render() {
-        const {redirectToReferrer, error} = this.state;
+        const {redirectToReferrer, error, unequalPasswords} = this.state;
 
         if (redirectToReferrer) {
             return <Redirect to="/dashboard"/>;
@@ -128,6 +132,7 @@ class Signup extends React.Component {
             ...this.basicValidationConfig,
             equalTo: this.state.password
         };
+
 
         return (
             <div>
@@ -151,6 +156,12 @@ class Signup extends React.Component {
                                 <Message negative>
                                     <Message.Header>Unable to register new user</Message.Header>
                                     <p>Error occured while trying to register new user</p>
+                                </Message>
+                                }
+                                {unequalPasswords &&
+                                <Message negative>
+                                    <Message.Header>Unable to register new user</Message.Header>
+                                    <p>Passwords are not equal</p>
                                 </Message>
                                 }
 

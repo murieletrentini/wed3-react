@@ -76,7 +76,7 @@ class Login extends React.Component {
             let hasErrors = false;
             this.state.validationErrorMap.forEach((value, key, mapObj) => {
                 if (value) {
-                    hasErrors = value;
+                    hasErrors = true;
                 }
             });
 

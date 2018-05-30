@@ -1,7 +1,6 @@
 import React from 'react'
 import {Table} from "semantic-ui-react";
 
-//TODO: add key to get rid of warning
 const TableItemAll = ({date, from, target, amount, total}) => (
     <Table.Row>
         <Table.Cell>{new Intl.DateTimeFormat('de-DE', {

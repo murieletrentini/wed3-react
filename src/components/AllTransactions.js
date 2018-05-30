@@ -40,14 +40,12 @@ class AllTransactions extends React.Component {
         this.updateTransactions({year: this.state.year, month: this.state.month});
     }
 
-    //TODO: add page parameter to get the next 10 entries
     updateTransactions = ({year, month}) => {
         this.setState({month: month, year: year});
         let from = new Date(Date.UTC(year, month));
         let to = new Date(Date.UTC(year, month+1, 0));
         getTransactions(this.props.token, from, to, 1000, 0)
             .then(result => {
-                console.log("transactions ", result.result);
                 this.setState({transactions: result.result});
             })
             .catch(error => this.setState({error}));

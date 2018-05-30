@@ -1,7 +1,6 @@
 import React from 'react'
 import {Table} from "semantic-ui-react";
 
-//TODO: add key to get rid of warning
 const TableItemLatest = ({from, target, amount, total}) => (
     <Table.Row>
         <Table.Cell>{from}</Table.Cell>

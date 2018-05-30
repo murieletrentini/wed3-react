@@ -19,7 +19,8 @@ class NewPayment extends React.Component {
             success: false,
             error: null,
             validationErrorMap: new Map([
-                ["Amount in CHF", [true]]]),
+                ["Amount in CHF", [true]],
+                ["Target Account Number", [true]]]),
             hasValidationErrors: true,
         };
     }
@@ -29,7 +30,6 @@ class NewPayment extends React.Component {
         const {toAccountNr, amount} = this.state;
         transfer(toAccountNr, amount, this.props.token)
             .then(result => {
-                console.log("transfer ", result);
                 this.props.onNewTransaction();
                 this.handleRefreshAccountDetails();
                 this.setState({success: true, accountNrPrompt: defaultPromptText});
@@ -39,13 +39,18 @@ class NewPayment extends React.Component {
 
     handleTargetChange = (event: Event) => {
         if (event.target instanceof HTMLInputElement) {
+
             this.setState({toAccountNr: event.target.value});
 
             if (event.target.value !== "") {
+                let placeholder: String = event.target.placeholder;
                 getAccount(event.target.value, this.props.token).then(result => {
                     this.setState({accountNrPrompt: result.owner.firstname + " " + result.owner.lastname});
+                    this.handleValidationComponents(placeholder, false);
                 })
                 .catch(error => {
+                    this.state.validationErrorMap.set("Target Account Number", true);
+                    this.handleValidationComponents(placeholder, true);
                     this.setState({error: error, accountNrPrompt: 'Unknown account nr specified'});
                 });
             }
@@ -65,31 +70,32 @@ class NewPayment extends React.Component {
     }
 
     handleAmountChange = (event: Event, hasErrors: Boolean) => {
-        this.handleValidationComponents(event, hasErrors);
+        this.handleValidationComponents(event.target.placeholder, hasErrors);
         this.setState({amount: event.target.value});
     };
 
     handleStartOverClicked = (event: Event) => {
-        this.setState({success: false, toAccountNr: '', amount: ''});
+        this.setState({
+            success: false,
+            toAccountNr: '',
+            amount: '',
+            validationErrorMap: new Map([
+                ["Amount in CHF", [true]],
+                ["Target Account Number", [true]]]),});
     };
 
-    handleValidationComponents = (event: Event, elementHasErrors: Boolean) => {
+    handleValidationComponents = (placeholder: String, elementHasErrors: Boolean) => {
         let validationErrorMap = this.state.validationErrorMap;
-        validationErrorMap.set(event.target.placeholder, elementHasErrors);
-
-        console.log(event.target.placeholder);
-        console.log(elementHasErrors);
+        validationErrorMap.set(placeholder, elementHasErrors);
 
         this.setState({validationErrorMap: validationErrorMap}, () => {
 
                 let hasErrors = false;
             this.state.validationErrorMap.forEach((value, key, mapObj) => {
                 if (value) {
-                    hasErrors = value;
+                    hasErrors = true;
                 }
             });
-
-            console.log(hasErrors);
 
             this.setState({hasValidationErrors: hasErrors});
         });
@@ -101,7 +107,6 @@ class NewPayment extends React.Component {
             required: true,
             minAmount: 0.05
         };
-        //TODO: disable button if errors
         return (
             <Segment.Group>
                 <Segment color="blue">
@@ -116,7 +121,7 @@ class NewPayment extends React.Component {
                             <Button onClick={this.handleStartOverClicked} size='large' content='Start over' color='linkedin'/>
                         </div>
                     ) : (
-                        <Form onSubmit={this.handleSubmit}>
+                        <Form onSubmit={this.handleSubmit} noValidate>
                             <Form.Field>
                                 <label>From</label>
                                 <Input
