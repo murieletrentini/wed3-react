@@ -80,6 +80,7 @@ class NewPayment extends React.Component {
     handleStartOverClicked = (event: Event) => {
         this.setState({
             success: false,
+            hasValidationErrors: true,
             toAccountNr: '',
             amount: '',
             validationErrorMap: new Map([
