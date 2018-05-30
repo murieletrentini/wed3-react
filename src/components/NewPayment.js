@@ -42,8 +42,8 @@ class NewPayment extends React.Component {
 
             this.setState({toAccountNr: event.target.value});
 
+            let placeholder: String = event.target.placeholder;
             if (event.target.value !== "") {
-                let placeholder: String = event.target.placeholder;
                 getAccount(event.target.value, this.props.token).then(result => {
                     this.setState({accountNrPrompt: result.owner.firstname + " " + result.owner.lastname});
                     this.handleValidationComponents(placeholder, false);
@@ -53,6 +53,9 @@ class NewPayment extends React.Component {
                     this.handleValidationComponents(placeholder, true);
                     this.setState({error: error, accountNrPrompt: 'Unknown account nr specified'});
                 });
+            } else {
+                this.state.validationErrorMap.set("Target Account Number", true);
+                this.handleValidationComponents(placeholder, true);
             }
         }
     };
